@@ -1,4 +1,4 @@
-package SteamboatSprings;
+package SteamboatSprings.SiteManagementAPI;
 
 import java.awt.EventQueue;
 
@@ -27,8 +27,6 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
-
-
 
 public class BaledMaterial {
 

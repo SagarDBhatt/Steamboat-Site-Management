@@ -1,4 +1,4 @@
-package SteamboatSprings;
+package SteamboatSprings.SiteManagementAPI;
 
 import gnu.io.*;
 import java.awt.Color;

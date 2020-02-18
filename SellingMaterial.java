@@ -1,4 +1,4 @@
-package SteamboatSprings;
+package SteamboatSprings.SiteManagementAPI;
 
 import java.awt.EventQueue;
 
