@@ -500,19 +500,48 @@ public class IncomingMaterial {
 
 		aStatement.executeUpdate(qryInsert);
 		JOptionPane.showMessageDialog(null, "Data entered successfully");
+		
+		txtFieldOtherCustomerName.setText("");
+		txtFieldTicketNumber.setText("");
+		txtFieldWeightSS.setText("");
+		txtFieldWeightOCC.setText("");
+		txtFieldTrashoutWeight.setText("");
+		cmbobxMaterialType.setSelectedIndex(0);
+		comboBoxCustomerName.setSelectedIndex(0);
+		
 
 	}//End of Method SQL Exception
 	
 //Review entered data. 
 	
 	public boolean review() {
-		grosseightInLb = Double.parseDouble(txtFieldWeightOCC.getText() + txtFieldWeightSS.getText());
-		int reply = JOptionPane.showConfirmDialog(null, "Reviw entered data : \n\n" + 
+		
+		if(cmbobxMaterialType.getSelectedIndex()==3) {
+		grosseightInLb = Double.parseDouble(txtFieldWeightOCC.getText()) + Double.parseDouble(txtFieldWeightSS.getText());
+		}
+
+		if(cmbobxMaterialType.getSelectedIndex()==1) {
+		grosseightInLb = Double.parseDouble(txtFieldWeightSS.getText());
+		}
+		
+		if(cmbobxMaterialType.getSelectedIndex()==2) {
+			grosseightInLb = Double.parseDouble(txtFieldWeightOCC.getText());
+			}
+		
+		if(cmbobxMaterialType.getSelectedIndex()==4) {
+			grosseightInLb = Double.parseDouble(txtFieldTrashoutWeight.getText());
+			}
+		if (comboBoxCustomerName.getSelectedIndex() == 2)
+		{
+			objCustomerName = txtFieldOtherCustomerName.getText();
+		}
+		
+		int reply = JOptionPane.showConfirmDialog(null, "Review entered data : \n\n" + 
 														" Weight Ticket Number : " + txtFieldTicketNumber.getText() +
-														"\n Customer Name : " + comboBoxCustomerName.getSelectedItem() +
+														"\n Customer Name : " + objCustomerName +
 														"\n Material Type : " + cmbobxMaterialType.getSelectedItem() +
-														"\n Date : " + localDate +
-														"\n Time : " + localTime + 
+														"\n Date : " + txtFieldDate.getText() +
+														"\n Time : " + txtFieldTime.getText() + 
 														"\n Weight : " + grosseightInLb, "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if (reply == JOptionPane.YES_OPTION)

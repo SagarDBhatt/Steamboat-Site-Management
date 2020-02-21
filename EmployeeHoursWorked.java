@@ -287,17 +287,21 @@ public class EmployeeHoursWorked {
 		
 		aStatement.executeUpdate(insertToEmployee);
 		JOptionPane.showMessageDialog(null, "Employee data entered Successfully");
+		
+		comboBoxEmpName.setSelectedIndex(0);
+		comboBoxHoursWorked.setSelectedIndex(0);
+		comboBoxBreakTime.setSelectedIndex(0);
 	}
 	
 	
 	public boolean review() {
 		
-		int reply = JOptionPane.showConfirmDialog(null, "Reviw entered data : \n" + 
+		int reply = JOptionPane.showConfirmDialog(null, "Review entered data : \n" + 
 														"\n Employee : " + comboBoxEmpName.getSelectedItem() +
 														"\n Hours worked : " + comboBoxHoursWorked.getSelectedItem() +
 														"\n Break Time : " + comboBoxBreakTime.getSelectedItem() +
-														"\n Date : " + localDate +
-														"\n Time : " + localTime , "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+														"\n Date : " + txtFieldDateEmp.getText() +
+														"\n Time : " + txtFieldTimeEmp.getText() , "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if (reply == JOptionPane.YES_OPTION)
 		{

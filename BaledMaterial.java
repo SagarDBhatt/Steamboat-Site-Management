@@ -117,7 +117,7 @@ public class BaledMaterial {
 		comboBoxBaledMaterial.setForeground(new Color(0, 0, 0));
 		comboBoxBaledMaterial.setToolTipText("Baled Material");
 		comboBoxBaledMaterial.setFont(new Font("Calibri", Font.PLAIN, 16));
-		comboBoxBaledMaterial.setModel(new DefaultComboBoxModel(new String[] {"OCC", "ONP", "HDPEN", "HDPEC", "PET", "TIN", "UBC", "Rejects"}));
+		comboBoxBaledMaterial.setModel(new DefaultComboBoxModel(new String[] {"OCC", "ONP", "HDPEN", "HDPEC", "PET", "TIN", "UBC"}));
 		comboBoxBaledMaterial.setSelectedIndex(0);
 		comboBoxBaledMaterial.setBounds(187, 71, 120, 23);
 		frmRevolutionSystems.getContentPane().add(comboBoxBaledMaterial);
@@ -320,6 +320,10 @@ public class BaledMaterial {
 		aStatement.executeUpdate(qryInsert);
 		JOptionPane.showMessageDialog(null, "Baled Material entered successfully");
 		
+		comboBoxBaledMaterial.setSelectedIndex(0);
+		comboBoxNumberOfBales.setSelectedIndex(0);
+		txtFieldWeight.setText("");
+		
 		
 	}//End of InsertToBaledMaterial(). 
 	
@@ -366,10 +370,10 @@ public class BaledMaterial {
 	
 	public boolean review() {
 		
-		int reply = JOptionPane.showConfirmDialog(null, "Reviw entered data : \n" + 
+		int reply = JOptionPane.showConfirmDialog(null, "Review entered data : \n" + 
 														"\n Material Type : " + comboBoxBaledMaterial.getSelectedItem() +
-														"\n Date : " + localDate +
-														"\n Time : " + localTime + 
+														"\n Date : " + txtFieldDate.getText() +
+														"\n Time : " + txtFieldTime.getText() + 
 														"\n Weight : " + txtFieldWeight.getText() , "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if (reply == JOptionPane.YES_OPTION)

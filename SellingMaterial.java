@@ -338,6 +338,13 @@ public class SellingMaterial {
 		
 		JOptionPane.showMessageDialog(null, "Selling Material entered successfully");
 		
+		comboBoxCustomerName.setSelectedIndex(0);
+		comboBoxMaterialType.setSelectedIndex(0);
+		txtFieldOtherCustomerName.setText("");
+		txtFieldTicketNumber.setText("");
+		txtFieldBOLNumber.setText("");
+		txtFieldWeightOfMaterial.setText("");
+		
 	}//End of Insert Method
 	
 //Validation method	
@@ -380,13 +387,18 @@ public class SellingMaterial {
 	
 	public boolean review() {
 		//grosseightInLb = Double.parseDouble(txtFieldWeightOCC.getText() + txtFieldWeightSS.getText());
-		int reply = JOptionPane.showConfirmDialog(null, "Reviw entered data : \n\n" + 
-														"Customer Name : " + comboBoxCustomerName.getSelectedItem() +
+		
+		if (comboBoxCustomerName.getSelectedIndex() == 2) {
+			objCustomerName = txtFieldOtherCustomerName.getText();
+		}
+		
+		int reply = JOptionPane.showConfirmDialog(null, "Review entered data : \n\n" + 
+														"Customer Name : " + objCustomerName +
 														"\n Weight Ticket Number : " + txtFieldTicketNumber.getText() +
 														"\n BOL number : " + txtFieldBOLNumber.getText() +
 														"\n Material Type : " + comboBoxMaterialType.getSelectedItem() +
-														"\n Date : " + localDate +
-														"\n Time : " + localTime + 
+														"\n Date : " + txtFieldDate.getText() +
+														"\n Time : " + txtFieldTime.getText() + 
 														"\n Weight : " + txtFieldWeightOfMaterial.getText(), "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if (reply == JOptionPane.YES_OPTION)
