@@ -449,33 +449,43 @@ public class IncomingMaterial {
 		{
 			weightSS = Double.parseDouble(txtFieldWeightSS.getText());
 			weightOCC = 0;
+			trashOutWeightInLb=0;
+			trashOutWeightInTons=0;
 		}
 		
-		if ((cmbobxMaterialType.getSelectedIndex() == 2))
+		else if ((cmbobxMaterialType.getSelectedIndex() == 2))
 		{
 			weightOCC = Double.parseDouble(txtFieldWeightOCC.getText()); 
 			weightSS = 0;
+			trashOutWeightInLb=0;
+			trashOutWeightInTons=0;
 		}
 		
-		if ((cmbobxMaterialType.getSelectedIndex() == 3))
+		else if ((cmbobxMaterialType.getSelectedIndex() == 3))
 		{
 			weightSS = Double.parseDouble(txtFieldWeightSS.getText());
-			weightOCC = Double.parseDouble(txtFieldWeightOCC.getText()); 
+			weightOCC = Double.parseDouble(txtFieldWeightOCC.getText());
+			grosseightInLb = weightSS + weightOCC;
+			grossWeightInTons = grosseightInLb / 2000.0;
+			
+			trashOutWeightInLb=0;
+			trashOutWeightInTons=0;
+		}
+		
+		else
+		{
+			trashOutWeightInLb = Double.parseDouble(txtFieldTrashoutWeight.getText()); 
+			trashOutWeightInTons = trashOutWeightInLb / 2000.0;
+			weightSS=0;
+			weightOCC=0;
+			grosseightInLb=0;
+			grossWeightInTons=0;
 		}
 		
 		if (comboBoxCustomerName.getSelectedIndex() == 2)
 		{
 			objCustomerName = txtFieldOtherCustomerName.getText();
 		}
-		
-		if ((cmbobxMaterialType.getSelectedIndex() == 4))
-		{
-			trashOutWeightInLb = Double.parseDouble(txtFieldTrashoutWeight.getText()); 
-			trashOutWeightInTons = trashOutWeightInLb / 2000.0;
-		}
-		
-		grosseightInLb = weightSS + weightOCC;
-		grossWeightInTons = grosseightInLb / 2000.0;
 
 		 
 	}//End of Input data()
