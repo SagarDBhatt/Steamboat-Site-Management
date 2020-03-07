@@ -451,6 +451,8 @@ public class IncomingMaterial {
 			weightOCC = 0;
 			trashOutWeightInLb=0;
 			trashOutWeightInTons=0;
+			grosseightInLb = weightSS;
+			grossWeightInTons = grosseightInLb / 2000.0;
 		}
 		
 		else if ((cmbobxMaterialType.getSelectedIndex() == 2))
@@ -459,6 +461,8 @@ public class IncomingMaterial {
 			weightSS = 0;
 			trashOutWeightInLb=0;
 			trashOutWeightInTons=0;
+			grosseightInLb = weightOCC;
+			grossWeightInTons = grosseightInLb / 2000.0;
 		}
 		
 		else if ((cmbobxMaterialType.getSelectedIndex() == 3))
