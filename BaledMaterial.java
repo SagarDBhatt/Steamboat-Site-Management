@@ -327,32 +327,6 @@ public class BaledMaterial {
 		
 	}//End of InsertToBaledMaterial(). 
 	
-	/*
-	 * //Executing query to insert Employee work hours to TotalEmployeeHours table
-	 * in SQL.
-	 * 
-	 * public void InsertToTotalEmployeeHours() throws SQLException {
-	 * 
-	 * String qryInsertBaledMaterial =
-	 * " Insert into BaledMaterial (BaledMaterialId,MaterialType,NumberOfBales,Weight,Date,Time)\r\n"
-	 * +
-	 * " Values( (Select ISNULL(Max(BaledMaterialId) + 1,0) from BaledMaterial), ' "
-	 * +objBaledMaterialType+" ' , " + objNumberOfBales+ " , " +
-	 * txtFieldWeight.getText() +
-	 * " , ' "+txtFieldDate.getText()+" ' ,  "+txtFieldTime.getText()+" )\r\n";
-	 * 
-	 * String qryInsert =
-	 * " Insert into dbo.TotalEmployeeHours (NoOfEmployee,TotalEmployeeHours,DownTime,BreakTime)\r\n"
-	 * + "  Values ( "+txtFieldTotalEmployee.getText()+" ,"+txtFieldTotalWorkHours.
-	 * getText()+","+txtFieldDownTime.getText()+","+txtFieldBreakTime.getText()+")";
-	 * 
-	 * aStatement.executeUpdate(qryInsert); JOptionPane.showMessageDialog(null,
-	 * "Data inserted Successfully!!");
-	 * 
-	 * 
-	 * }//End of InsertToBaledMaterial().
-	 */
-	
 	public boolean validation()
 	{
 		
