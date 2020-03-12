@@ -374,7 +374,7 @@ public class BaledMaterial {
 														"\n Material Type : " + comboBoxBaledMaterial.getSelectedItem() +
 														"\n Date : " + txtFieldDate.getText() +
 														"\n Time : " + txtFieldTime.getText() + 
-														"\n Weight : " + txtFieldWeight.getText() , "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+														"\n Weight : " + txtFieldWeight.getText() + " lbs " , "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if (reply == JOptionPane.YES_OPTION)
 		{
