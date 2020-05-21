@@ -67,8 +67,9 @@ public class SellingMaterial {
 	
 		JComboBox comboBoxMaterialType = new JComboBox();
 		JComboBox comboBoxCustomerName = new JComboBox();
+		JComboBox comboBoxNumberOfBales = new JComboBox();
 		
-		Object objCustomerName,objMaterialType;
+		Object objCustomerName,objMaterialType,objNumberOfBales;
 		
 		double weightInLb, weightInTons;
 		
@@ -315,7 +316,6 @@ public class SellingMaterial {
 		numberOfBales.setBounds(304, 207, 157, 20);
 		frmRevolutionSystems.getContentPane().add(numberOfBales);
 		
-		JComboBox comboBoxNumberOfBales = new JComboBox();
 		comboBoxNumberOfBales.setMaximumRowCount(20);
 		comboBoxNumberOfBales.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"}));
 		comboBoxNumberOfBales.setBounds(469, 207, 53, 20);
@@ -343,8 +343,10 @@ public class SellingMaterial {
 		weightInLb = Double.parseDouble(txtFieldWeightOfMaterial.getText());
 		weightInTons = weightInLb / 2000.0;
 		
-		String qryInsertSellingMaterial = "Insert into SellingMaterial (CustomerID, CustomerName,WeightTicketNumber,BOLNumber,MaterialType,[WeightOfMaterial (in lb)],[WeightOfMaterial (in tons)],Date,Time)\r\n" + 
-				"Values ( (Select ISNULL(Max(CustomerID) + 1,0) from SellingMaterial), '"+ objCustomerName +"', "+txtFieldTicketNumber.getText()+" , "+ txtFieldBOLNumber.getText() +" , ' "+ objMaterialType +" ', "+ txtFieldWeightOfMaterial.getText() +" , "+ weightInTons +",' "+ txtFieldDate.getText() +" ' , ' "+txtFieldTime.getText()+" ')";
+		String qryInsertSellingMaterial = "Insert into SoldMaterial "
+				+ "(CustomerID, CustomerName,WeightTicketNumber,BOLNumber,MaterialType,"
+				+ "[WeightOfMaterial (in lb)],[WeightOfMaterial (in tons)],NumberOfBales,Date,Time)\r\n" + 
+				"Values ( (Select ISNULL(Max(CustomerID) + 1,0) from SoldMaterial), '"+ objCustomerName +"', "+txtFieldTicketNumber.getText()+" , "+ txtFieldBOLNumber.getText() +" , ' "+ objMaterialType +" ', "+ txtFieldWeightOfMaterial.getText() +" , "+ weightInTons +", "+ objNumberOfBales +" ,'"+ txtFieldDate.getText() +" ' , ' "+txtFieldTime.getText()+" ')";
 		
 		aStatement.executeUpdate(qryInsertSellingMaterial);
 		
@@ -364,6 +366,7 @@ public class SellingMaterial {
 		
 		objCustomerName = comboBoxCustomerName.getSelectedItem();
 		objMaterialType = comboBoxMaterialType.getSelectedItem();
+		objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
 		
 		if (comboBoxCustomerName.getSelectedIndex() == 2) {
 			
@@ -409,6 +412,7 @@ public class SellingMaterial {
 														"\n Weight Ticket Number : " + txtFieldTicketNumber.getText() +
 														"\n BOL number : " + txtFieldBOLNumber.getText() +
 														"\n Material Type : " + comboBoxMaterialType.getSelectedItem() +
+														"\n Number of Bales : " + comboBoxNumberOfBales.getSelectedIndex() +
 														"\n Date : " + txtFieldDate.getText() +
 														"\n Time : " + txtFieldTime.getText() + 
 														"\n Weight : " + txtFieldWeightOfMaterial.getText(), "Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
