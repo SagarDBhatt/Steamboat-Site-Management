@@ -308,6 +308,18 @@ public class SellingMaterial {
 		lblInPounds.setFont(new Font("Calibri", Font.PLAIN, 16));
 		lblInPounds.setBounds(327, 261, 45, 20);
 		frmRevolutionSystems.getContentPane().add(lblInPounds);
+		
+		JLabel numberOfBales = new JLabel("Number of Bales*\r\n");
+		numberOfBales.setHorizontalAlignment(SwingConstants.RIGHT);
+		numberOfBales.setFont(new Font("Calibri", Font.PLAIN, 16));
+		numberOfBales.setBounds(304, 207, 157, 20);
+		frmRevolutionSystems.getContentPane().add(numberOfBales);
+		
+		JComboBox comboBoxNumberOfBales = new JComboBox();
+		comboBoxNumberOfBales.setMaximumRowCount(20);
+		comboBoxNumberOfBales.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"}));
+		comboBoxNumberOfBales.setBounds(469, 207, 53, 20);
+		frmRevolutionSystems.getContentPane().add(comboBoxNumberOfBales);
 
 //End of Local Date and Time		
 		
@@ -409,6 +421,4 @@ public class SellingMaterial {
 			return false;
 		
 	}//End of Review()
-	
-	
 }//End of class
