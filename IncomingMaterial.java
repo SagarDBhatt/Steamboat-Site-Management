@@ -509,7 +509,7 @@ public class IncomingMaterial {
 
 	public void InsertMaterialData() throws SQLException {
 
-		String qryInsert = "  Insert into IncomingMaterial (CustomerName,WeightTicketNumber,Date,Time,MatrialType,[WeightSS(lb)],[WeightOCC(lb)],[GrossWeight(lb)],[GrossWeight(tons)],[TrashOutWeight(lb)],[TrashOutWeight(tons)])\r\n" + 
+		String qryInsert = "  Insert into [Steamboat].[dbo].[IncomingMaterial] (CustomerName,WeightTicketNumber,Date,Time,MatrialType,[WeightSS(lb)],[WeightOCC(lb)],[GrossWeight(lb)],[GrossWeight(tons)],[TrashOutWeight(lb)],[TrashOutWeight(tons)])\r\n" + 
 				"  Values ('"+ objCustomerName +"',"+ ticketNumber +",'"+ txtFieldDate.getText() +"','"+ txtFieldTime.getText() +"', ' "+ objMaterialType +" ', "+ weightSS +" ,"+ weightOCC +" , "+ grosseightInLb +" , "+grossWeightInTons+", "+ trashOutWeightInLb +", "+ trashOutWeightInTons +") ";
 
 		aStatement.executeUpdate(qryInsert);

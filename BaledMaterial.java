@@ -68,7 +68,7 @@ public class BaledMaterial {
 //Application variables to receive data to insert into SQL database. 
 	
 	Object objBaledMaterialType, objNumberOfBales;
-	double weightOfBales = 0; 
+	double weightOfBales = 0, baleWeightInTons = 0; 
 	
 //End of Application Variables
 	
@@ -290,18 +290,7 @@ public class BaledMaterial {
 		//JOptionPane.showMessageDialog(null, "Connection Successful!!!");
 		
 	}//End of method ConnectToSql(). 
-	
-	/*
-	 * //Input data from TextField.
-	 * 
-	 * public void InputData() {
-	 * 
-	 * 
-	 * }
-	 * 
-	 * 
-	 * //End of Input Method.
-	 */
+
 //Executing query to insert material to Baled Material table in SQL. 
 	
 	public void InsertToBaledMaterial() throws SQLException
@@ -312,10 +301,11 @@ public class BaledMaterial {
 		objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
 		//System.out.println(objNumberOfBales);
 		
-		weightOfBales = Double.parseDouble(txtFieldWeight.getText()) / 2000.0;
+		weightOfBales = Double.parseDouble(txtFieldWeight.getText());
+		baleWeightInTons = weightOfBales / 2000.0;
 		
-		String qryInsert = "Insert into BaledMaterial (BaledMaterialId,MaterialType,NumberOfBales,Weight,Date,Time)\r\n" + 
-				"	Values( (Select ISNULL(Max(BaledMaterialId) + 1,0) from BaledMaterial), ' "+objBaledMaterialType+" ' , "+ objNumberOfBales+" , "+ weightOfBales +" , '"+txtFieldDate.getText()+"' , '"+txtFieldTime.getText()+"')";
+		String qryInsert = "Insert into BaledMaterial (BaledMaterialId,MaterialType,NumberOfBales,Weight,Date,Time,GrossWeightInTons)\r\n" + 
+				"	Values( (Select ISNULL(Max(BaledMaterialId) + 1,0) from BaledMaterial), ' "+objBaledMaterialType+" ' , "+ objNumberOfBales+" , "+ weightOfBales +" , '"+txtFieldDate.getText()+"' , '"+txtFieldTime.getText()+"', "+ baleWeightInTons +" )";
 		
 		aStatement.executeUpdate(qryInsert);
 		JOptionPane.showMessageDialog(null, "Baled Material entered successfully");
