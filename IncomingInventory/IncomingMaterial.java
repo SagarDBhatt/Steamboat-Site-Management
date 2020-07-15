@@ -1,4 +1,4 @@
-package SteamboatSprings.SiteManagementAPI;
+package SteamboatSprings.SiteManagementAPI.IncomingInventory;
 
 import java.awt.EventQueue;
 
