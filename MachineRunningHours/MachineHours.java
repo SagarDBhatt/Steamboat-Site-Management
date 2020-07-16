@@ -1,4 +1,4 @@
-package SteamboatSprings.SiteManagementAPI.MachineRunningHours;
+package SiteManagementAPI.MachineRunningHours;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -21,6 +21,9 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class MachineHours {
@@ -89,17 +92,7 @@ public class MachineHours {
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		panel_1.setLayout(new MigLayout("", "[83px][69px][59px]", "[29px]"));
-		
-//ActionListener Method for Submit button		
-		JButton btnNewButton = new JButton("Submit");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Tracker.connectToSQL();
-			}
-		});
-//End of ActionListener method
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		panel_1.add(btnNewButton, "cell 0 0,alignx left,aligny top");
+
 		
 		JButton btnClear = new JButton("Clear");
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -134,7 +127,9 @@ public class MachineHours {
 		panel.add(lblDate, "2, 4, center, top");
 		
 		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setDateFormatString("MM-dd-yyyy");
 		panel.add(dateChooser, "4, 4, fill, fill");
+		dateChooser.setDateFormatString("MM-dd-yyyy");
 		
 		JLabel lblComments = new JLabel("Comments");
 		lblComments.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -144,6 +139,20 @@ public class MachineHours {
 		txtFieldComments.setColumns(10);
 		panel.add(txtFieldComments, "4, 6, fill, fill");
 		machineHourFrame.getContentPane().setLayout(groupLayout);
+		
+		
+//ActionListener Method for Submit button		
+		JButton btnNewButton = new JButton("Submit");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Tracker.connectToSQL();
+				Tracker.reviewData(dateChooser, txtFieldClockHours.getText(), txtFieldComments.getText().toString());
+
+			}
+		});
+//End of ActionListener method
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		panel_1.add(btnNewButton, "cell 0 0,alignx left,aligny top");
 		
 		
 	}

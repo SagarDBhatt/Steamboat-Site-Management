@@ -1,4 +1,4 @@
-package SteamboatSprings.SiteManagementAPI.SoldInventory;
+package SiteManagementAPI.SoldInventory;
 
 import java.awt.Color;
 import java.awt.EventQueue;
