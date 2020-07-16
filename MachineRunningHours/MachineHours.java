@@ -20,6 +20,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MachineHours {
 
@@ -88,7 +90,14 @@ public class MachineHours {
 		);
 		panel_1.setLayout(new MigLayout("", "[83px][69px][59px]", "[29px]"));
 		
+//ActionListener Method for Submit button		
 		JButton btnNewButton = new JButton("Submit");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Tracker.connectToSQL();
+			}
+		});
+//End of ActionListener method
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_1.add(btnNewButton, "cell 0 0,alignx left,aligny top");
 		
