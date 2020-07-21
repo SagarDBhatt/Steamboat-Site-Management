@@ -1,7 +1,8 @@
-package SiteManagementAPI.MachineRunningHours;
+package SteamboatSprings.SiteManagementAPI.MachineRunningHours;
 
 import java.sql.*;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.toedter.calendar.JDateChooser;
@@ -25,31 +26,31 @@ public class Tracker {
 			aConnection = DriverManager.getConnection(dbURL, userName, "");
 			aStatement = aConnection.createStatement();
 
-			JOptionPane.showMessageDialog(null, "Connected to SQL instance");
+			JOptionPane.showMessageDialog(null, "Connected to SQL instance","Connection Successful!", JOptionPane.INFORMATION_MESSAGE);
 
 		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Class Not found!!!");
+			JOptionPane.showMessageDialog(null, "Class Not found!!!","Warning!!",JOptionPane.WARNING_MESSAGE);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Unable to Connect with SQL instance");
+			JOptionPane.showMessageDialog(null, "Unable to Connect with SQL instance","Warning!!",JOptionPane.WARNING_MESSAGE);
 		}
 	}// End of connectToSQL()
 
 	/**
 	 * Method to add data into SQL database into MachineHourTracker table.
 	 */
-	public static void insertToMachineHour(JDateChooser dateChooser, String clockHours, String comments) {
+	public static void insertToMachineHour(JDateChooser dateChooser, String clockHours, String comments, Double totalRunningHours) {
 
 		java.sql.Date date = new java.sql.Date(dateChooser.getDate().getTime());
 
 		String qryInsrtHoursTracker = "Insert into tblMachineHourTracker (TransactionID, ClockHours, Date, Comments, RunningHours)\r\n"
 				+ "Values(  (Select ISNULL(MAX(TransactionID) + 1, 0) from tblMachineHourTracker) , "
-				+ Double.parseDouble(clockHours) + " , '" + date + "', '" + comments + "', 20) ";
+				+ Double.parseDouble(clockHours) + " , '" + date + "', '" + comments + "', "+ totalRunningHours +") ";
 
 		try {
 			aStatement.executeUpdate(qryInsrtHoursTracker);
 			JOptionPane.showMessageDialog(null, "Data inserted successfully!!!");
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Unable to execute SQL Query!!!");
+			JOptionPane.showMessageDialog(null, "Unable to execute SQL Query!!!","Warning!!",JOptionPane.WARNING_MESSAGE);
 		}
 
 	}// End of InsertTOMachineHour()
@@ -57,34 +58,59 @@ public class Tracker {
 	public static void reviewData(JDateChooser dateChooser, String clockHours, String comments) {
 
 		java.sql.Date date = null;
-		boolean errorCapture=false;
-		
+		boolean errorCapture = false;
+
 		try {
 			date = new java.sql.Date(dateChooser.getDate().getTime());
-		} 
-		catch (Exception e) {
-			//JOptionPane.showMessageDialog(null, "Insert the valid Date!!");
+		} catch (Exception e) {
+			// JOptionPane.showMessageDialog(null, "Insert the valid Date!!");
 			errorCapture = true;
 		}
 
 		if (!clockHours.matches("[0-9]+\\.[0-9]*")) {
-			JOptionPane.showMessageDialog(null, "Insert valid Clock Hours. For Eg: 5034.7");
+			JOptionPane.showMessageDialog(null, "Insert valid Clock Hours. For Eg: 5034.7","Warning!", JOptionPane.WARNING_MESSAGE);
 		}
 
-		else if(errorCapture) {
+		else if (errorCapture) {
 			JOptionPane.showMessageDialog(null, "Insert the valid Date!!");
-		}
-		else {
+		} else {
 
 			int reply = JOptionPane.showConfirmDialog(null,
 					"Review Data \n" + "Clock Hours : " + Double.parseDouble(clockHours) + "\n" + "Date : " + date
 							+ "\n" + "Comments : " + comments,
 					"Confirm Review", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
+//After all the validations passed and user select "Yes" option in Review data then call InsertToMachineHours method. 			
 			if (reply == JOptionPane.YES_OPTION) {
-				insertToMachineHour(dateChooser, clockHours, comments);
+				insertToMachineHour(dateChooser, clockHours, comments, calcRunningHours(clockHours));
 			}
 
 		}
 	}// End of reviewData()
-}
+
+	public static double calcRunningHours(String todaysClockHours) {
+		
+		double todaysHour = Double.parseDouble(todaysClockHours);
+		double yesterdaysHour = 0, totalRunningHours =0;
+
+		String qryMachineHours = "Select Top 1 TransactionID, ClockHours \r\n" + "  From tblMachineHourTracker\r\n"
+				+ "  order by TransactionID Desc";
+
+		try {
+			ResultSet rsRunningHours = aStatement.executeQuery(qryMachineHours);
+			
+			while(rsRunningHours.next()) {
+				
+				yesterdaysHour = rsRunningHours.getDouble("ClockHours");
+				//JOptionPane.showConfirmDialog(null, "Yesyerday's clock hour = " + yesterdaysHour + "\n" + "Todays clockhour =" + todaysHour);
+				totalRunningHours = todaysHour - yesterdaysHour;
+			}
+		} 
+		catch (SQLException e) {
+			JOptionPane.showConfirmDialog(null, "Unable to execute Machine Hour Query","Error - Need Attention!!",JOptionPane.ERROR_MESSAGE);
+		}
+
+		return totalRunningHours;
+	}// end of calcRunningHpurd()
+
+}// End of class

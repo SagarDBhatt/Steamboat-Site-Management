@@ -1,4 +1,4 @@
-package SiteManagementAPI.IncomingInventory;
+package SteamboatSprings.SiteManagementAPI.IncomingInventory;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -65,7 +65,15 @@ public class IncomingMaterial {
 	String userName = "CTLIO/Sbhatt";
 
 	Connection aConnection = null;
-	Statement aStatement = null;
+	private static Statement aStatement = null;
+
+	public static Statement getaStatement() {
+		return aStatement;
+	}
+
+	public static void setaStatement(Statement aStatement) {
+		IncomingMaterial.aStatement = aStatement;
+	}
 
 	ResultSet rsInsert =null; 
 
@@ -354,6 +362,8 @@ public class IncomingMaterial {
 			Class.forName(JDBC_Driver);
 			aConnection = DriverManager.getConnection(dbURL, userName, "");
 			aStatement = aConnection.createStatement();
+			
+			System.out.println("SQL Connected!");
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

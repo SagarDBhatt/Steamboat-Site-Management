@@ -1,4 +1,4 @@
-package SiteManagementAPI.MachineRunningHours;
+package SteamboatSprings.SiteManagementAPI.MachineRunningHours;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -40,7 +40,7 @@ public class MachineHours {
 			public void run() {
 				try {
 					MachineHours window = new MachineHours();
-					window.machineHourFrame.setVisible(true);
+					window.machineHourFrame.setVisible(true); 
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,10 +65,10 @@ public class MachineHours {
 		machineHourFrame.setBounds(100, 100, 373, 308);
 		machineHourFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Hours Tracker", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		JPanel panelInputFunctions = new JPanel();
+		panelInputFunctions.setBorder(new TitledBorder(null, "Hours Tracker", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JPanel panel_1 = new JPanel();
+		JPanel panelButtons = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(machineHourFrame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -76,32 +76,32 @@ public class MachineHours {
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 278, GroupLayout.PREFERRED_SIZE))
+							.addComponent(panelButtons, GroupLayout.PREFERRED_SIZE, 278, GroupLayout.PREFERRED_SIZE))
 						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(panelInputFunctions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(69, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE)
+					.addComponent(panelInputFunctions, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
+					.addComponent(panelButtons, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
-		panel_1.setLayout(new MigLayout("", "[83px][69px][59px]", "[29px]"));
+		panelButtons.setLayout(new MigLayout("", "[83px][69px][59px]", "[29px]"));
 
 		
 		JButton btnClear = new JButton("Clear");
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		panel_1.add(btnClear, "cell 1 0,alignx right,aligny top");
+		panelButtons.add(btnClear, "cell 1 0,alignx right,aligny top");
 		
 		JButton btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		panel_1.add(btnExit, "cell 2 0,alignx left,aligny top");
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
+		panelButtons.add(btnExit, "cell 2 0,alignx left,aligny top");
+		panelInputFunctions.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 				ColumnSpec.decode("94px"),
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
@@ -116,28 +116,28 @@ public class MachineHours {
 		
 		JLabel lblClockHours = new JLabel("Clock Hours");
 		lblClockHours.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		panel.add(lblClockHours, "2, 2, left, top");
+		panelInputFunctions.add(lblClockHours, "2, 2, left, top");
 		
 		txtFieldClockHours = new JTextField();
 		txtFieldClockHours.setColumns(10);
-		panel.add(txtFieldClockHours, "4, 2, fill, fill");
+		panelInputFunctions.add(txtFieldClockHours, "4, 2, fill, fill");
 		
 		JLabel lblDate = new JLabel("Date");
 		lblDate.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		panel.add(lblDate, "2, 4, center, top");
+		panelInputFunctions.add(lblDate, "2, 4, center, top");
 		
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("MM-dd-yyyy");
-		panel.add(dateChooser, "4, 4, fill, fill");
+		panelInputFunctions.add(dateChooser, "4, 4, fill, fill");
 		dateChooser.setDateFormatString("MM-dd-yyyy");
 		
 		JLabel lblComments = new JLabel("Comments");
 		lblComments.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		panel.add(lblComments, "2, 6, left, center");
+		panelInputFunctions.add(lblComments, "2, 6, left, center");
 		
 		txtFieldComments = new JTextField();
 		txtFieldComments.setColumns(10);
-		panel.add(txtFieldComments, "4, 6, fill, fill");
+		panelInputFunctions.add(txtFieldComments, "4, 6, fill, fill");
 		machineHourFrame.getContentPane().setLayout(groupLayout);
 		
 		
@@ -152,7 +152,7 @@ public class MachineHours {
 		});
 //End of ActionListener method
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		panel_1.add(btnNewButton, "cell 0 0,alignx left,aligny top");
+		panelButtons.add(btnNewButton, "cell 0 0,alignx left,aligny top");
 		
 		
 	}
