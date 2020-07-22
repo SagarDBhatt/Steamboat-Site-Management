@@ -90,6 +90,7 @@ public class CurrentInventoryCount {
 				soldMaterialWeight.put(rsSoldInventory.getString("MaterialType"),
 						rsSoldInventory.getDouble("TotalSoldWeight"));
 			}
+			dddd
 
 			for (String s : soldMaterialBales.keySet())
 				System.out.println(s + "\t" + soldMaterialBales.get(s));
@@ -105,5 +106,7 @@ public class CurrentInventoryCount {
 		}
 
 	}// End of calcSoldMaterial()
+	
+	
 
 }// End of class
