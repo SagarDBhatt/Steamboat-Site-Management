@@ -62,7 +62,8 @@ public class Tracker {
 
 		try {
 			date = new java.sql.Date(dateChooser.getDate().getTime());
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			// JOptionPane.showMessageDialog(null, "Insert the valid Date!!");
 			errorCapture = true;
 		}

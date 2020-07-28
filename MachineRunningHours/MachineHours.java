@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPanel;
@@ -93,12 +94,37 @@ public class MachineHours {
 		);
 		panelButtons.setLayout(new MigLayout("", "[83px][69px][59px]", "[29px]"));
 
-		
+//ActionListener Method for "Clear" button.		
 		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtFieldComments.setText("");
+				txtFieldClockHours.setText("");
+			}
+		});
+//End of ActionListener. 		
+
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panelButtons.add(btnClear, "cell 1 0,alignx right,aligny top");
-		
+
+//ActionListener Method for "Exit" button.		
 		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int reply = JOptionPane.showConfirmDialog(null, "Do you want to Exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				
+				if (reply == JOptionPane.YES_OPTION)
+				{
+					System.exit(0);
+				}
+				else
+					txtFieldClockHours.requestFocus();
+			}
+			
+		});
+//End of ActionListener. 
+		
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panelButtons.add(btnExit, "cell 2 0,alignx left,aligny top");
 		panelInputFunctions.setLayout(new FormLayout(new ColumnSpec[] {
@@ -147,10 +173,13 @@ public class MachineHours {
 			public void actionPerformed(ActionEvent arg0) {
 				Tracker.connectToSQL();
 				Tracker.reviewData(dateChooser, txtFieldClockHours.getText(), txtFieldComments.getText().toString());
-
+				txtFieldClockHours.setText("");
+				txtFieldComments.setText("");
+				
 			}
 		});
 //End of ActionListener method
+		
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panelButtons.add(btnNewButton, "cell 0 0,alignx left,aligny top");
 		
