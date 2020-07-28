@@ -363,7 +363,8 @@ public class IncomingMaterial {
 			aConnection = DriverManager.getConnection(dbURL, userName, "");
 			aStatement = aConnection.createStatement();
 			
-			System.out.println("SQL Connected!");
+			JOptionPane.showMessageDialog(null, "Connected To SQL Database", "Success",
+					JOptionPane.INFORMATION_MESSAGE);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

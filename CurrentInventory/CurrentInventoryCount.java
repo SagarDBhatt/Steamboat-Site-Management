@@ -14,10 +14,6 @@ import SteamboatSprings.SiteManagementAPI.IncomingInventory.IncomingMaterial;
 public class CurrentInventoryCount {
 
 //	ONSJHJSA;
-	/*
-	 * public static void main(String[] Args) { connection(); calcBaledMaterial();
-	 * calcSoldMaterial(); getCurrentInventory(); updateNewInventory(); }
-	 */
 
 	// Class level Map values.
 	static Map<String, Integer> soldMaterialBalesYesterday = new TreeMap<String, Integer>();
@@ -45,29 +41,12 @@ public class CurrentInventoryCount {
 		 * Map Material type and appropriate Bales Count and Weight in tons.
 		 */
 
-		/*
-		 * String qryTotalIncomingMaterial =
-		 * "  Select TRIM(MaterialType) AS MaterialType, sum(NumberOfBales) AS TotalIncomingBales, Sum(GrossWeightInTons) AS TotalIncomingWeight\r\n"
-		 * +
-		 * "  From BaledMaterial   Where Date >= DATEADD(day, datediff(day,1,getDate()),0)\r\n"
-		 * + "  AND Date < DATEADD(day,datediff(day,0,getdate()),0)\r\n" +
-		 * "  Group by MaterialType\r\n" + "  Order By MaterialType";
-		 */
-
 		productionMaterialBalesYesterday.put(materialType, baleCount);
 		productionMaterialWeightYesterday.put(materialType, grossWeight);
 
 	}// End of calcBaledMaterial()
 
 	public static void calcSoldMaterial(String materialType, Integer soldBaleCount, Double soldWeight) {
-
-		/*
-		 * String qryTotalSoldMaterial =
-		 * "Select TRIM(MaterialType) AS MaterialType, Sum(NumberOfBales) AS TotalSoldBales, Sum([WeightOfMaterial (in tons)]) AS TotalSoldWeight\r\n"
-		 * +
-		 * "  From SoldMaterial Where Date = DATEADD(day, datediff(day,0,getDate()),0)\r\n"
-		 * + "  Group by MaterialType";
-		 */
 
 		soldMaterialBalesYesterday.put(materialType, soldBaleCount);
 		soldMaterialWeightYesterday.put(materialType, soldWeight);
@@ -133,9 +112,6 @@ public class CurrentInventoryCount {
 							- soldMaterialWeightYesterday.get(material);
 				}
 
-				String qryInsertNewInventory = "  Insert Into [Current Inventory] ([Material Type],[Weight (tons)],[Available Bales])\r\n"
-						+ "  Values (' " + material + " ', " + newInventoryWeight + " , " + newInventoryBales + " )";
-
 				String qryUpdateInventory = "  Update [Current Inventory]\r\n" + "  Set [Available Bales]  = "
 						+ newInventoryBales + ", [Weight (tons)] = " + newInventoryWeight + "\r\n"
 						+ "  where TRIM([Material Type]) = '" + material + "'\r\n";
@@ -151,33 +127,5 @@ public class CurrentInventoryCount {
 		}
 
 	}// End of updateNewInventory()
-
-	/*
-	 * public static void calcCurrentInventory(Map productionMaterialBales, Map
-	 * productionMaterialWeight, Map soldMaterialBales, Map soldMaterialWeight) {
-	 * Double currentWeight = 0d; int currentBale = 0;
-	 * 
-	 * System.out.println("Inside Calc Current Inv");
-	 *//**
-		 * Iterate the MaterialType in a KeySet() of ProductionMaterialBales. Identify
-		 * the similar key from SoldMaterialBales using containsKey(). Get the
-		 * ProductionWeight for Baled and SoldMaterial and subtract to get currentWeight
-		 * of inventory.
-		 * 
-		 * Simillarly, get the TotalBales from Production and Sold material to calculate
-		 * Current Bale count.
-		 *//*
-			 * for (Object str : productionMaterialBales.keySet()) {
-			 * 
-			 * if (productionMaterialBales.containsKey(str)) {
-			 * 
-			 * System.out.println("Inside if statement"); System.out.println("Material = " +
-			 * str); currentBale = (Integer) productionMaterialBales.get(str) - (Integer)
-			 * soldMaterialBales.get(str); System.out.println(currentBale); }
-			 * 
-			 * }
-			 * 
-			 * }
-			 */
 
 }// End of class

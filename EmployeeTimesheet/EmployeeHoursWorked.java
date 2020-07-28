@@ -126,7 +126,7 @@ public class EmployeeHoursWorked {
 		frmRevolutionSystems.getContentPane().add(lblHoursWorked);
 		
 		//JComboBox comboBoxHoursWorked = new JComboBox();
-		comboBoxHoursWorked.setModel(new DefaultComboBoxModel(new String[] {"1", "1.25", "1.5", "1.75", "2", "2.25", "2.5", "2.75", "3", "3.25", "3.5", "3.75", "4", "4.25", "4.5", "4.75", "5", "5.25", "6.5", "6.75", "7", "7.25", "7.5", "7.75", "8", ""}));
+		comboBoxHoursWorked.setModel(new DefaultComboBoxModel(new String[] {"1", "1.25", "1.5", "1.75", "2", "2.25", "2.5", "2.75", "3", "3.25", "3.5", "3.75", "4", "4.25", "4.5", "4.75", "5", "5.25", "6.5", "6.75", "7", "7.25", "7.5", "7.75", "8"}));
 		comboBoxHoursWorked.setBounds(162, 116, 76, 20);
 		frmRevolutionSystems.getContentPane().add(comboBoxHoursWorked);
 		
