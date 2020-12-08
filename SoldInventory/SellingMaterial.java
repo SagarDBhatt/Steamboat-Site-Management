@@ -11,9 +11,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -25,30 +27,41 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import SteamboatSprings.SiteManagementAPI.CurrentInventory.CurrentInventoryCount;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.toedter.calendar.JDateChooser;
+import java.awt.FlowLayout;
 
 public class SellingMaterial {
 
 	private JFrame frmRevolutionSystems;
 	private JTextField txtFieldTicketNumber;
 	private JTextField txtFieldWeightOfMaterial;
-	private JTextField txtFieldDate;
 	private JTextField txtFieldOtherCustomerName;
-	private JTextField txtFieldTime;
 	private JTextField txtFieldBOLNumber;
 
-//LocalDate and time objects to display system date and time. 
 
-	LocalDate date = java.time.LocalDate.now();
-	LocalTime time = java.time.LocalTime.now();
-
-	DateTimeFormatter timeForamtter = DateTimeFormatter.ofPattern("HH:mm");
-	String localTime = time.format(timeForamtter);
-
-	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-	String localDate = date.format(dateFormatter);
-
-//End of declaring and initializing System date and time	
-
+	JDateChooser dateChooser;
+	java.sql.Date date;
+	
+	/*
+	 * //LocalDate and time objects to display system date and time.
+	 * 
+	 * LocalDate date = java.time.LocalDate.now(); LocalTime time =
+	 * java.time.LocalTime.now();
+	 * 
+	 * DateTimeFormatter timeForamtter = DateTimeFormatter.ofPattern("HH:mm");
+	 * String localTime = time.format(timeForamtter);
+	 * 
+	 * DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+	 * String localDate = date.format(dateFormatter);
+	 * 
+	 * //End of declaring and initializing System date and time
+	 */
 //SQL connection variables define
 
 	String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -69,8 +82,11 @@ public class SellingMaterial {
 	Object objCustomerName, objMaterialType, objNumberOfBales;
 
 	double weightInLb, weightInTons;
+	
+//Create object of Current Inventory 
+	CurrentInventoryCount currentInventoryObject;
 
-//
+//End
 
 	/**
 	 * Launch the application.
@@ -104,161 +120,125 @@ public class SellingMaterial {
 				.getResource("/windowBuilder/Resources/6cfcb4e9556799a6fcbf983aab9fab19-32bits-16.png")));
 		frmRevolutionSystems.setType(Type.POPUP);
 		frmRevolutionSystems.setTitle("Revolution Systems");
-		frmRevolutionSystems.setBounds(100, 100, 645, 496);
+		frmRevolutionSystems.setBounds(100, 100, 602, 316);
 		frmRevolutionSystems.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRevolutionSystems.getContentPane().setLayout(null);
 
-		JLabel lblSellingMaterialInformation = new JLabel("Selling Material Information");
-		lblSellingMaterialInformation.setFont(new Font("Calibri", Font.BOLD, 20));
-		lblSellingMaterialInformation.setBackground(Color.LIGHT_GRAY);
-		lblSellingMaterialInformation.setBounds(149, 11, 276, 30);
-		frmRevolutionSystems.getContentPane().add(lblSellingMaterialInformation);
+		JPanel jPanelEntry = new JPanel();
+		jPanelEntry.setBorder(
+				new TitledBorder(null, "Sold Inventory Reporting", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		jPanelEntry.setBounds(1, 11, 583, 218);
+		frmRevolutionSystems.getContentPane().add(jPanelEntry);
+		jPanelEntry.setLayout(new FormLayout(
+				new ColumnSpec[] { FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC, FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, },
+				new RowSpec[] { FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), }));
 
 		JLabel label = new JLabel("Customer Name*");
+		jPanelEntry.add(label, "2, 2");
 		label.setToolTipText("Enter the Weight Ticket Number");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
 		label.setFont(new Font("Calibri", Font.PLAIN, 16));
-		label.setBounds(10, 73, 157, 33);
-		frmRevolutionSystems.getContentPane().add(label);
+		jPanelEntry.add(comboBoxCustomerName, "4, 2");
 
-		JLabel lblTicketNumber = new JLabel("Weight Ticket Number*");
-		lblTicketNumber.setToolTipText("Enter the Weight Ticket Number");
-		lblTicketNumber.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTicketNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblTicketNumber.setBounds(10, 141, 157, 33);
-		frmRevolutionSystems.getContentPane().add(lblTicketNumber);
-
-		comboBoxCustomerName
-				.setModel(new DefaultComboBoxModel(new String[] { "Sage Recycling", "McKinley Paper", "Other" }));
+		comboBoxCustomerName.setModel(new DefaultComboBoxModel(new String[] {"Sage Recycling", "McKinley Paper", "Republic Papers", "Other"}));
 		comboBoxCustomerName.setToolTipText("Select Customer Name");
 		comboBoxCustomerName.setMaximumRowCount(100);
 		comboBoxCustomerName.setFont(new Font("Calibri", Font.PLAIN, 16));
-		comboBoxCustomerName.setBounds(177, 73, 140, 20);
-		frmRevolutionSystems.getContentPane().add(comboBoxCustomerName);
+
+		JLabel label_1 = new JLabel("Other");
+		jPanelEntry.add(label_1, "6, 2, center, center");
+		label_1.setToolTipText("Enter the Weight Ticket Number");
+		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_1.setFont(new Font("Calibri", Font.PLAIN, 16));
+
+		txtFieldOtherCustomerName = new JTextField();
+		jPanelEntry.add(txtFieldOtherCustomerName, "8, 2");
+		txtFieldOtherCustomerName.setHorizontalAlignment(SwingConstants.CENTER);
+		txtFieldOtherCustomerName.setFont(new Font("Calibri", Font.PLAIN, 16));
+		txtFieldOtherCustomerName.setColumns(10);
+
+		JLabel lblTicketNumber = new JLabel("Weight Ticket Number*");
+		jPanelEntry.add(lblTicketNumber, "2, 4");
+		lblTicketNumber.setToolTipText("Enter the Weight Ticket Number");
+		lblTicketNumber.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTicketNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
 
 		txtFieldTicketNumber = new JTextField();
+		jPanelEntry.add(txtFieldTicketNumber, "4, 4");
 		txtFieldTicketNumber.setHorizontalAlignment(SwingConstants.CENTER);
 		txtFieldTicketNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
 		txtFieldTicketNumber.setColumns(10);
-		txtFieldTicketNumber.setBounds(177, 135, 140, 33);
-		frmRevolutionSystems.getContentPane().add(txtFieldTicketNumber);
 
-		JLabel label_3 = new JLabel("Weight of Material");
-		label_3.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_3.setFont(new Font("Calibri", Font.PLAIN, 16));
-		label_3.setBounds(10, 267, 157, 20);
-		frmRevolutionSystems.getContentPane().add(label_3);
+		JLabel lblBolNumber = new JLabel("BOL Number*");
+		jPanelEntry.add(lblBolNumber, "2, 6");
+		lblBolNumber.setToolTipText("Enter the Weight Ticket Number");
+		lblBolNumber.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblBolNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
 
-		txtFieldWeightOfMaterial = new JTextField();
-		txtFieldWeightOfMaterial.setToolTipText("Weight of Single Stream in pounds");
-		txtFieldWeightOfMaterial.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldWeightOfMaterial.setFont(new Font("Calibri", Font.PLAIN, 16));
-		txtFieldWeightOfMaterial.setColumns(10);
-		txtFieldWeightOfMaterial.setBounds(177, 255, 140, 33);
-		frmRevolutionSystems.getContentPane().add(txtFieldWeightOfMaterial);
+		txtFieldBOLNumber = new JTextField();
+		jPanelEntry.add(txtFieldBOLNumber, "4, 6");
+		txtFieldBOLNumber.setHorizontalAlignment(SwingConstants.CENTER);
+		txtFieldBOLNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
+		txtFieldBOLNumber.setColumns(10);
+
+		JLabel label_4 = new JLabel("Material Type*");
+		jPanelEntry.add(label_4, "2, 8");
+		label_4.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_4.setFont(new Font("Calibri", Font.PLAIN, 16));
+		jPanelEntry.add(comboBoxMaterialType, "4, 8");
 
 		comboBoxMaterialType.setModel(
 				new DefaultComboBoxModel(new String[] { "OCC", "ONP", "HDPEN", "HDPEC", "PET", "TIN", "UBC" }));
 		comboBoxMaterialType.setFont(new Font("Calibri", Font.PLAIN, 16));
-		comboBoxMaterialType.setBounds(177, 207, 140, 20);
-		frmRevolutionSystems.getContentPane().add(comboBoxMaterialType);
 
-		JLabel label_4 = new JLabel("Material Type*");
-		label_4.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_4.setFont(new Font("Calibri", Font.PLAIN, 16));
-		label_4.setBounds(10, 207, 157, 20);
-		frmRevolutionSystems.getContentPane().add(label_4);
+		JLabel numberOfBales = new JLabel("Number of Bales*\r\n");
+		jPanelEntry.add(numberOfBales, "6, 8");
+		numberOfBales.setHorizontalAlignment(SwingConstants.RIGHT);
+		numberOfBales.setFont(new Font("Calibri", Font.PLAIN, 16));
+		jPanelEntry.add(comboBoxNumberOfBales, "8, 8");
+
+		comboBoxNumberOfBales.setMaximumRowCount(20);
+		comboBoxNumberOfBales.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"}));
+
+		JLabel lblSoldInventoryWeight = new JLabel("Sold Inventory weight (lbs)");
+		jPanelEntry.add(lblSoldInventoryWeight, "2, 10");
+		lblSoldInventoryWeight.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSoldInventoryWeight.setFont(new Font("Calibri", Font.PLAIN, 16));
+
+		txtFieldWeightOfMaterial = new JTextField();
+		jPanelEntry.add(txtFieldWeightOfMaterial, "4, 10");
+		txtFieldWeightOfMaterial.setToolTipText("Weight of Single Stream in pounds");
+		txtFieldWeightOfMaterial.setHorizontalAlignment(SwingConstants.CENTER);
+		txtFieldWeightOfMaterial.setFont(new Font("Calibri", Font.PLAIN, 16));
+		txtFieldWeightOfMaterial.setColumns(10);
 
 		JLabel label_2 = new JLabel("Date*");
+		jPanelEntry.add(label_2, "2, 12, right, top");
 		label_2.setHorizontalAlignment(SwingConstants.RIGHT);
 		label_2.setFont(new Font("Calibri", Font.PLAIN, 16));
-		label_2.setBounds(10, 325, 157, 20);
-		frmRevolutionSystems.getContentPane().add(label_2);
 
-		txtFieldDate = new JTextField();
-		txtFieldDate.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldDate.setFont(new Font("Calibri", Font.PLAIN, 16));
-		txtFieldDate.setColumns(10);
-		txtFieldDate.setBounds(177, 313, 140, 33);
-		frmRevolutionSystems.getContentPane().add(txtFieldDate);
+		dateChooser = new JDateChooser();
+		jPanelEntry.add(dateChooser, "4, 12, fill, top");
 
-		JLabel label_1 = new JLabel("Other");
-		label_1.setToolTipText("Enter the Weight Ticket Number");
-		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_1.setFont(new Font("Calibri", Font.PLAIN, 16));
-		label_1.setBounds(365, 73, 94, 33);
-		frmRevolutionSystems.getContentPane().add(label_1);
+		JPanel panel = new JPanel();
+		panel.setBounds(7, 232, 576, 41);
+		frmRevolutionSystems.getContentPane().add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		txtFieldOtherCustomerName = new JTextField();
-		txtFieldOtherCustomerName.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldOtherCustomerName.setFont(new Font("Calibri", Font.PLAIN, 16));
-		txtFieldOtherCustomerName.setColumns(10);
-		txtFieldOtherCustomerName.setBounds(469, 73, 115, 33);
-		frmRevolutionSystems.getContentPane().add(txtFieldOtherCustomerName);
-
-		JLabel lblTime = new JLabel("Time*");
-		lblTime.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTime.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblTime.setBounds(377, 325, 82, 20);
-		frmRevolutionSystems.getContentPane().add(lblTime);
-
-		txtFieldTime = new JTextField();
-		txtFieldTime.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldTime.setFont(new Font("Calibri", Font.PLAIN, 16));
-		txtFieldTime.setColumns(10);
-		txtFieldTime.setBounds(469, 313, 115, 33);
-		frmRevolutionSystems.getContentPane().add(txtFieldTime);
-
-		JLabel lblBolNumber = new JLabel("BOL Number*");
-		lblBolNumber.setToolTipText("Enter the Weight Ticket Number");
-		lblBolNumber.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblBolNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblBolNumber.setBounds(351, 142, 108, 30);
-		frmRevolutionSystems.getContentPane().add(lblBolNumber);
-
-		txtFieldBOLNumber = new JTextField();
-		txtFieldBOLNumber.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldBOLNumber.setFont(new Font("Calibri", Font.PLAIN, 16));
-		txtFieldBOLNumber.setColumns(10);
-		txtFieldBOLNumber.setBounds(469, 135, 115, 33);
-		frmRevolutionSystems.getContentPane().add(txtFieldBOLNumber);
-
-//Action Listener Method for 'Submit' button
+		// Action Listener Method for 'Submit' button
 
 		JButton button = new JButton("Submit");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		button.setFont(new Font("Calibri", Font.BOLD | Font.ITALIC, 16));
+		panel.add(button);
 
-				try {
-					ConnectToSQL();
-
-					if (validation()) {
-						if (review()) {
-							insertSellingMaterial();
-							CurrentInventoryCount.connection();
-							CurrentInventoryCount.calcSoldMaterial(objMaterialType.toString(),
-									Integer.parseInt(objNumberOfBales.toString()), weightInTons);
-							CurrentInventoryCount.getCurrentInventory();
-							CurrentInventoryCount.updateNewInventory();
-						}
-					}
-				}
-
-				catch (ClassNotFoundException | SQLException e1) {
-					JOptionPane.showMessageDialog(null, "Class Not Found inside Selling Material!!", "Error!!",
-							JOptionPane.ERROR_MESSAGE);
-				}
-
-			}
-		});
-
-//End of Action Listener method. 
-
-		button.setBounds(103, 391, 102, 33);
-		frmRevolutionSystems.getContentPane().add(button);
-
-//Clear button action listener		
+		// Clear button action listener
 		JButton button_1 = new JButton("Clear");
+		panel.add(button_1);
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -271,14 +251,13 @@ public class SellingMaterial {
 			}
 		});
 
-//End of Action listener
+		// End of Action listener
 
-		button_1.setFont(new Font("Calibri", Font.PLAIN, 16));
-		button_1.setBounds(230, 391, 102, 33);
-		frmRevolutionSystems.getContentPane().add(button_1);
+		button_1.setFont(new Font("Calibri", Font.BOLD | Font.ITALIC, 16));
 
-//Exit button action listener
+		// Exit button action listener
 		JButton button_2 = new JButton("Exit");
+		panel.add(button_2);
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -292,35 +271,36 @@ public class SellingMaterial {
 			}
 		});
 
-//End of Exit button 		
-		button_2.setFont(new Font("Calibri", Font.PLAIN, 16));
-		button_2.setBounds(357, 391, 102, 33);
-		frmRevolutionSystems.getContentPane().add(button_2);
+		// End of Exit button
+		button_2.setFont(new Font("Calibri", Font.BOLD | Font.ITALIC, 16));
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
-//Setting Date and Time in the textfield
+				try {
+					ConnectToSQL();
 
-		txtFieldDate.setText(localDate);
-		txtFieldTime.setText(localTime);
+					if (validation()) {
+						if (review()) {
+							insertSellingMaterial();
+							
+							currentInventoryObject = new CurrentInventoryCount();
+							
+							currentInventoryObject.connection();
+							currentInventoryObject.calcSoldMaterial(objMaterialType.toString(),
+									Integer.parseInt(objNumberOfBales.toString()), weightInTons);
+							currentInventoryObject.getCurrentInventory();
+							currentInventoryObject.updateNewInventory();
+						}
+					}
+				}
 
-		JLabel lblInPounds = new JLabel("(in lbs)");
-		lblInPounds.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblInPounds.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblInPounds.setBounds(327, 261, 45, 20);
-		frmRevolutionSystems.getContentPane().add(lblInPounds);
+				catch (ClassNotFoundException | SQLException e1) {
+					JOptionPane.showMessageDialog(null, "Class Not Found inside Selling Material!!", "Error!!",
+							JOptionPane.ERROR_MESSAGE);
+				}
 
-		JLabel numberOfBales = new JLabel("Number of Bales*\r\n");
-		numberOfBales.setHorizontalAlignment(SwingConstants.RIGHT);
-		numberOfBales.setFont(new Font("Calibri", Font.PLAIN, 16));
-		numberOfBales.setBounds(304, 207, 157, 20);
-		frmRevolutionSystems.getContentPane().add(numberOfBales);
-
-		comboBoxNumberOfBales.setMaximumRowCount(20);
-		comboBoxNumberOfBales.setModel(new DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8",
-				"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25",
-				"26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42",
-				"43", "44", "45", "46", "47", "48", "49", "50" }));
-		comboBoxNumberOfBales.setBounds(469, 207, 53, 20);
-		frmRevolutionSystems.getContentPane().add(comboBoxNumberOfBales);
+			}
+		});
 
 //End of Local Date and Time		
 
@@ -343,18 +323,19 @@ public class SellingMaterial {
 
 		weightInLb = Double.parseDouble(txtFieldWeightOfMaterial.getText());
 		weightInTons = weightInLb / 2000.0;
-
+		date = new java.sql.Date(dateChooser.getDate().getTime());
+		
 		String qryInsertSellingMaterial = "Insert into SoldMaterial "
 				+ "(CustomerID, CustomerName,WeightTicketNumber,BOLNumber,MaterialType,"
 				+ "[WeightOfMaterial (in lb)],[WeightOfMaterial (in tons)],NumberOfBales,Date,Time)\r\n"
 				+ "Values ( (Select ISNULL(Max(CustomerID) + 1,0) from SoldMaterial), '" + objCustomerName + "', "
 				+ txtFieldTicketNumber.getText() + " , " + txtFieldBOLNumber.getText() + " , ' " + objMaterialType
 				+ " ', " + txtFieldWeightOfMaterial.getText() + " , " + weightInTons + ", " + objNumberOfBales + " ,'"
-				+ txtFieldDate.getText() + " ' , ' " + txtFieldTime.getText() + " ')";
+				+ date + " ' , ' 0:00 ')";
 
 		aStatement.executeUpdate(qryInsertSellingMaterial);
 
-		JOptionPane.showMessageDialog(null, "Selling Material entered successfully");
+		JOptionPane.showMessageDialog(null, "Sold Inventory reported successfully");
 
 		comboBoxCustomerName.setSelectedIndex(0);
 		comboBoxMaterialType.setSelectedIndex(0);
@@ -372,7 +353,20 @@ public class SellingMaterial {
 		objMaterialType = comboBoxMaterialType.getSelectedItem();
 		objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
 
-		if (comboBoxCustomerName.getSelectedIndex() == 2) {
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
+
+		String dtChooser = sdfo.format(dateChooser.getDate());
+		String todaysDate = sdfo.format(new Date());
+		
+		
+		if(dtChooser.compareTo(todaysDate)>0) {
+			JOptionPane.showMessageDialog(null, "Date can not be future date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
+		
+		if (comboBoxCustomerName.getSelectedIndex() == 3) {
 
 			if (!txtFieldOtherCustomerName.getText().matches("[a-zA-Z]+")) {
 				JOptionPane.showMessageDialog(null, "Please Enter Customer Name in Other", "No null values allowed",
@@ -409,7 +403,7 @@ public class SellingMaterial {
 		// grosseightInLb = Double.parseDouble(txtFieldWeightOCC.getText() +
 		// txtFieldWeightSS.getText());
 
-		if (comboBoxCustomerName.getSelectedIndex() == 2) {
+		if (comboBoxCustomerName.getSelectedIndex() == 3) {
 			objCustomerName = txtFieldOtherCustomerName.getText();
 		}
 
@@ -417,8 +411,8 @@ public class SellingMaterial {
 				"Review entered data : \n\n" + "Customer Name : " + objCustomerName + "\n Weight Ticket Number : "
 						+ txtFieldTicketNumber.getText() + "\n BOL number : " + txtFieldBOLNumber.getText()
 						+ "\n Material Type : " + comboBoxMaterialType.getSelectedItem() + "\n Number of Bales : "
-						+ comboBoxNumberOfBales.getSelectedIndex() + "\n Date : " + txtFieldDate.getText()
-						+ "\n Time : " + txtFieldTime.getText() + "\n Weight : " + txtFieldWeightOfMaterial.getText(),
+						+ comboBoxNumberOfBales.getSelectedIndex() + "\n Date : " + new java.sql.Date(dateChooser.getDate().getTime())
+						+"\n Weight : " + txtFieldWeightOfMaterial.getText(),
 				"Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 		if (reply == JOptionPane.YES_OPTION) {

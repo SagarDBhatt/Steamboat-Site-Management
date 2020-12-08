@@ -16,14 +16,14 @@ public class CurrentInventoryCount {
 //	ONSJHJSA;
 
 	// Class level Map values.
-	static Map<String, Integer> soldMaterialBalesYesterday = new TreeMap<String, Integer>();
-	static Map<String, Double> soldMaterialWeightYesterday = new TreeMap<String, Double>();
+	public Map<String, Integer> soldMaterialBalesYesterday = new TreeMap<String, Integer>();
+	public Map<String, Double> soldMaterialWeightYesterday = new TreeMap<String, Double>();
 
-	static Map<String, Integer> productionMaterialBalesYesterday = new TreeMap<String, Integer>();
-	static Map<String, Double> productionMaterialWeightYesterday = new TreeMap<String, Double>();
+	public Map<String, Integer> productionMaterialBalesYesterday = new TreeMap<String, Integer>();
+	public Map<String, Double> productionMaterialWeightYesterday = new TreeMap<String, Double>();
 
-	static Map<String, Integer> currentInvetoryMaterialBale = new TreeMap<String, Integer>();
-	static Map<String, Double> currentInventoryMaterialWeight = new TreeMap<String, Double>();
+	public Map<String, Integer> currentInvetoryMaterialBale = new TreeMap<String, Integer>();
+	public Map<String, Double> currentInventoryMaterialWeight = new TreeMap<String, Double>();
 
 	public static void connection() {
 		IncomingMaterial object = new IncomingMaterial();
@@ -35,7 +35,7 @@ public class CurrentInventoryCount {
 		}
 	}
 
-	public static void calcBaledMaterial(String materialType, Integer baleCount, Double grossWeight) {
+	public void calcBaledMaterial(String materialType, Integer baleCount, Double grossWeight) {
 
 		/**
 		 * Map Material type and appropriate Bales Count and Weight in tons.
@@ -46,7 +46,7 @@ public class CurrentInventoryCount {
 
 	}// End of calcBaledMaterial()
 
-	public static void calcSoldMaterial(String materialType, Integer soldBaleCount, Double soldWeight) {
+	public void calcSoldMaterial(String materialType, Integer soldBaleCount, Double soldWeight) {
 
 		soldMaterialBalesYesterday.put(materialType, soldBaleCount);
 		soldMaterialWeightYesterday.put(materialType, soldWeight);
@@ -56,7 +56,7 @@ public class CurrentInventoryCount {
 	/**
 	 * Method to get current Inventory Bale count and Weight.
 	 */
-	public static void getCurrentInventory() {
+	public void getCurrentInventory() {
 
 		String qryGetCurrentInventory = "  Select TRIM([Material Type]) As MaterialType, [Available Bales] AS AvailableBales, [Weight (tons)] AS AvailableWeight\r\n"
 				+ "  From [Current Inventory]\r\n";
@@ -82,7 +82,7 @@ public class CurrentInventoryCount {
 	 * Method to calculate the new Inventory = CurrentInventory + Yesterday's
 	 * Production - Yesterday's Sold.
 	 */
-	public static void updateNewInventory() {
+	public void updateNewInventory() {
 		Integer newInventoryBales = 0;
 		Double newInventoryWeight = 0d;
 
@@ -91,14 +91,17 @@ public class CurrentInventoryCount {
 			if (productionMaterialBalesYesterday.containsKey(material)
 					|| soldMaterialBalesYesterday.containsKey(material)) {
 
-				if (soldMaterialBalesYesterday.get(material) != null
-						&& productionMaterialBalesYesterday.get(material) != null) {
-					newInventoryBales = currentInvetoryMaterialBale.get(material)
-							+ productionMaterialBalesYesterday.get(material) - soldMaterialBalesYesterday.get(material);
-					newInventoryWeight = currentInventoryMaterialWeight.get(material)
-							+ productionMaterialWeightYesterday.get(material)
-							- soldMaterialWeightYesterday.get(material);
-				}
+				/*
+				 * if (soldMaterialBalesYesterday.get(material) != null &&
+				 * productionMaterialBalesYesterday.get(material) != null) { newInventoryBales =
+				 * currentInvetoryMaterialBale.get(material) +
+				 * productionMaterialBalesYesterday.get(material) -
+				 * soldMaterialBalesYesterday.get(material); newInventoryWeight =
+				 * currentInventoryMaterialWeight.get(material) +
+				 * productionMaterialWeightYesterday.get(material) -
+				 * soldMaterialWeightYesterday.get(material); }
+				 */
+
 				if (productionMaterialBalesYesterday.get(material) != null) {
 					newInventoryBales = currentInvetoryMaterialBale.get(material)
 							+ productionMaterialBalesYesterday.get(material);

@@ -7,10 +7,12 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -25,30 +27,41 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import SteamboatSprings.SiteManagementAPI.CurrentInventory.CurrentInventoryCount;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+import java.awt.GridLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.toedter.calendar.JDateChooser;
+import java.awt.FlowLayout;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.UIManager;
 
 public class BaledMaterial {
 
 	private JFrame frmRevolutionSystems;
 	private JTextField txtFieldWeight;
-	private JTextField txtFieldDate;
-	private JTextField txtFieldTime;
 
 	JComboBox comboBoxBaledMaterial = new JComboBox();
-	JComboBox comboBoxNumberOfBales = new JComboBox();
-
-//LocalDate and time objects to display system date and time. 
-
-	LocalDate date = java.time.LocalDate.now();
-	LocalTime time = java.time.LocalTime.now();
-
-	DateTimeFormatter timeForamtter = DateTimeFormatter.ofPattern("HH:mm");
-	String localTime = time.format(timeForamtter);
-
-	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-	String localDate = date.format(dateFormatter);
-
-//End of declaring and initializing System date and time	
-
+	JDateChooser dateChooser; 
+	java.sql.Date date;
+	
+	/*
+	 * //LocalDate and time objects to display system date and time.
+	 * 
+	 * LocalDate date = java.time.LocalDate.now(); LocalTime time =
+	 * java.time.LocalTime.now();
+	 * 
+	 * DateTimeFormatter timeForamtter = DateTimeFormatter.ofPattern("HH:mm");
+	 * String localTime = time.format(timeForamtter);
+	 * 
+	 * DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+	 * String localDate = date.format(dateFormatter);
+	 * 
+	 * //End of declaring and initializing System date and time
+	 */
 //SQL Connection variables
 
 	String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -64,11 +77,17 @@ public class BaledMaterial {
 
 //Application variables to receive data to insert into SQL database. 
 
-	Object objBaledMaterialType, objNumberOfBales;
+	Object objBaledMaterialType, objNumberOfBales = 1;
 	double weightOfBales = 0, baleWeightInTons = 0;
 
 //End of Application Variables
 
+//Create Current Inventory Object
+	CurrentInventoryCount currentInventoryObject;
+
+//End	
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -101,15 +120,33 @@ public class BaledMaterial {
 		frmRevolutionSystems.setIconImage(Toolkit.getDefaultToolkit().getImage(BaledMaterial.class
 				.getResource("/windowBuilder/Resources/6cfcb4e9556799a6fcbf983aab9fab19-32bits-16.png")));
 		frmRevolutionSystems.setTitle("Revolution Systems");
-		frmRevolutionSystems.setBounds(100, 100, 627, 365);
+		frmRevolutionSystems.setBounds(100, 100, 345, 219);
 		frmRevolutionSystems.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmRevolutionSystems.getContentPane().setLayout(null);
+		frmRevolutionSystems.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("280px"),},
+			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("113px"),
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+				RowSpec.decode("39px"),}));
+
+		JPanel jPanelDataEntry = new JPanel();
+		jPanelDataEntry.setBorder(
+				new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Production Inventory Reporting", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		frmRevolutionSystems.getContentPane().add(jPanelDataEntry, "2, 2, fill, fill");
+		jPanelDataEntry.setLayout(new FormLayout(
+				new ColumnSpec[] { FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC, FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, },
+				new RowSpec[] { FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), }));
 
 		JLabel lblMaterialName = new JLabel("Select Baled Material");
+		jPanelDataEntry.add(lblMaterialName, "2, 2");
 		lblMaterialName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMaterialName.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblMaterialName.setBounds(27, 70, 150, 25);
-		frmRevolutionSystems.getContentPane().add(lblMaterialName);
+		jPanelDataEntry.add(comboBoxBaledMaterial, "4, 2, 4, 1, fill, default");
 
 		comboBoxBaledMaterial.setForeground(new Color(0, 0, 0));
 		comboBoxBaledMaterial.setToolTipText("Baled Material");
@@ -117,89 +154,36 @@ public class BaledMaterial {
 		comboBoxBaledMaterial.setModel(
 				new DefaultComboBoxModel(new String[] { "OCC", "ONP", "HDPEN", "HDPEC", "PET", "TIN", "UBC" }));
 		comboBoxBaledMaterial.setSelectedIndex(0);
-		comboBoxBaledMaterial.setBounds(187, 71, 120, 23);
-		frmRevolutionSystems.getContentPane().add(comboBoxBaledMaterial);
-
-		// Selecting Baled Material.
-
-		objBaledMaterialType = comboBoxBaledMaterial.getSelectedItem();
-
-		// End
-
-		JLabel lblNewLabel = new JLabel("Baled Material Information");
-		lblNewLabel.setFont(new Font("Calibri", Font.BOLD, 24));
-		lblNewLabel.setBackground(Color.LIGHT_GRAY);
-		lblNewLabel.setBounds(124, 11, 289, 30);
-		frmRevolutionSystems.getContentPane().add(lblNewLabel);
-
-		JLabel lblNumberOfBales = new JLabel("Number of Bales");
-		lblNumberOfBales.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumberOfBales.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblNumberOfBales.setBounds(331, 70, 120, 25);
-		frmRevolutionSystems.getContentPane().add(lblNumberOfBales);
-
-		comboBoxNumberOfBales
-				.setModel(new DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8" }));
-		comboBoxNumberOfBales.setMaximumRowCount(50);
-		comboBoxNumberOfBales.setToolTipText("Number of Bales");
-		comboBoxNumberOfBales.setForeground(Color.BLACK);
-		comboBoxNumberOfBales.setFont(new Font("Calibri", Font.PLAIN, 16));
-		comboBoxNumberOfBales.setBounds(461, 71, 120, 23);
-		frmRevolutionSystems.getContentPane().add(comboBoxNumberOfBales);
-
-		// Selecting Baled Material.
-
-		objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
 
 		// End
 
 		JLabel lblWeight = new JLabel("Weight (in lbs)");
+		jPanelDataEntry.add(lblWeight, "2, 4");
 		lblWeight.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWeight.setToolTipText("Weight of Baled Material");
 		lblWeight.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblWeight.setBounds(27, 138, 120, 25);
-		frmRevolutionSystems.getContentPane().add(lblWeight);
 
 		txtFieldWeight = new JTextField();
+		jPanelDataEntry.add(txtFieldWeight, "4, 4, 4, 1, fill, default");
 		txtFieldWeight.setHorizontalAlignment(SwingConstants.CENTER);
 		txtFieldWeight.setToolTipText("Weight of Baled Material");
-		txtFieldWeight.setBounds(187, 139, 120, 23);
-		frmRevolutionSystems.getContentPane().add(txtFieldWeight);
 		txtFieldWeight.setColumns(10);
 
-		JButton btnMeasureWeight = new JButton("Measure Weight");
-		btnMeasureWeight.setBounds(327, 139, 150, 23);
-		frmRevolutionSystems.getContentPane().add(btnMeasureWeight);
-
 		JLabel lblDate = new JLabel("Date");
+		jPanelDataEntry.add(lblDate, "2, 6, center, top");
 		lblDate.setToolTipText("");
 		lblDate.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDate.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblDate.setBounds(27, 188, 120, 25);
-		frmRevolutionSystems.getContentPane().add(lblDate);
 
-		txtFieldDate = new JTextField();
-		txtFieldDate.setToolTipText("Weight of Baled Material");
-		txtFieldDate.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldDate.setColumns(10);
-		txtFieldDate.setBounds(187, 189, 120, 23);
-		frmRevolutionSystems.getContentPane().add(txtFieldDate);
+		dateChooser = new JDateChooser();
+		jPanelDataEntry.add(dateChooser, "4, 6, 4, 1, fill, top");
 
-		JLabel lblTime = new JLabel("Time");
-		lblTime.setToolTipText("");
-		lblTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTime.setFont(new Font("Calibri", Font.PLAIN, 16));
-		lblTime.setBounds(27, 236, 120, 25);
-		frmRevolutionSystems.getContentPane().add(lblTime);
-
-		txtFieldTime = new JTextField();
-		txtFieldTime.setToolTipText("Weight of Baled Material");
-		txtFieldTime.setHorizontalAlignment(SwingConstants.CENTER);
-		txtFieldTime.setColumns(10);
-		txtFieldTime.setBounds(187, 237, 120, 23);
-		frmRevolutionSystems.getContentPane().add(txtFieldTime);
+		JPanel panel = new JPanel();
+		frmRevolutionSystems.getContentPane().add(panel, "2, 4, fill, top");
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JButton btnSubmit = new JButton("Submit");
+		panel.add(btnSubmit);
 		btnSubmit.addActionListener(new ActionListener() {
 
 //ActionListener Event for "Submit" button
@@ -212,11 +196,13 @@ public class BaledMaterial {
 					if (validation()) {
 						if (review()) {
 							InsertToBaledMaterial();
-							CurrentInventoryCount.connection();
-							CurrentInventoryCount.calcBaledMaterial(objBaledMaterialType.toString(),
+							
+							currentInventoryObject = new CurrentInventoryCount();
+							currentInventoryObject.connection();
+							currentInventoryObject.calcBaledMaterial(objBaledMaterialType.toString(),
 									Integer.parseInt(objNumberOfBales.toString()), baleWeightInTons);
-							CurrentInventoryCount.getCurrentInventory();
-							CurrentInventoryCount.updateNewInventory();
+							currentInventoryObject.getCurrentInventory();
+							currentInventoryObject.updateNewInventory();
 						}
 					}
 					// InsertToTotalEmployeeHours();
@@ -231,28 +217,26 @@ public class BaledMaterial {
 			}
 		});
 		btnSubmit.setFont(new Font("Calibri", Font.PLAIN, 16));
-		btnSubmit.setBounds(29, 284, 150, 32);
-		frmRevolutionSystems.getContentPane().add(btnSubmit);
 
 		JButton btnClear = new JButton("Clear");
+		panel.add(btnClear);
 
-//Clear Button, action listener		
+		// Clear Button, action listener
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				comboBoxBaledMaterial.setSelectedIndex(0);
-				comboBoxNumberOfBales.setSelectedIndex(0);
+				//comboBoxNumberOfBales.setSelectedIndex(0);
 				txtFieldWeight.setText("");
 			}
 		});
-//End of Clear Button.		
+		// End of Clear Button.
 
 		btnClear.setFont(new Font("Calibri", Font.PLAIN, 16));
-		btnClear.setBounds(205, 284, 150, 32);
-		frmRevolutionSystems.getContentPane().add(btnClear);
 
-//Exit Button, ActionListener
+		// Exit Button, ActionListener
 		JButton btnExit = new JButton("Exit");
+		panel.add(btnExit);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int reply = JOptionPane.showConfirmDialog(null, "Do you want to Exit?", "Confirm Exit",
@@ -265,16 +249,13 @@ public class BaledMaterial {
 
 			}
 		});
-//End of Exit button. 
+		// End of Exit button.
 
 		btnExit.setFont(new Font("Calibri", Font.PLAIN, 16));
-		btnExit.setBounds(381, 284, 150, 32);
-		frmRevolutionSystems.getContentPane().add(btnExit);
 
-//Default system date and time in textFields of Date and Time. 
+		// Selecting Baled Material.
 
-		txtFieldDate.setText(localDate);
-		txtFieldTime.setText(localTime);
+		objBaledMaterialType = comboBoxBaledMaterial.getSelectedItem();
 
 	}// End of Initalize() method.
 
@@ -294,7 +275,9 @@ public class BaledMaterial {
 		objBaledMaterialType = comboBoxBaledMaterial.getSelectedItem();
 		// System.out.println(objBaledMaterialType);
 
-		objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
+		date = new java.sql.Date(dateChooser.getDate().getTime());
+		
+		//objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
 		// System.out.println(objNumberOfBales);
 
 		weightOfBales = Double.parseDouble(txtFieldWeight.getText());
@@ -302,8 +285,7 @@ public class BaledMaterial {
 
 		String qryInsert = "Insert into BaledMaterial (BaledMaterialId,MaterialType,NumberOfBales,Weight,Date,Time,GrossWeightInTons)\r\n"
 				+ "	Values( (Select ISNULL(Max(BaledMaterialId) + 1,0) from BaledMaterial), ' " + objBaledMaterialType
-				+ " ' , " + objNumberOfBales + " , " + weightOfBales + " , '" + txtFieldDate.getText() + "' , '"
-				+ txtFieldTime.getText() + "', " + baleWeightInTons + " )";
+				+ " ' , 1 , " + weightOfBales + " , '" + date + "' , '00:00', " + baleWeightInTons + " )";
 
 		aStatement.executeUpdate(qryInsert);
 		JOptionPane.showMessageDialog(null, "Baled Material entered successfully");
@@ -316,6 +298,18 @@ public class BaledMaterial {
 
 	public boolean validation() {
 
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
+
+		String dtChooser = sdfo.format(dateChooser.getDate());
+		String todaysDate = sdfo.format(new java.util.Date());
+		
+		
+		if(dtChooser.compareTo(todaysDate)>0) {
+			JOptionPane.showMessageDialog(null, "Date can not be a future date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
 		if (txtFieldWeight.getText().equals("")) {
 			JOptionPane.showMessageDialog(null, "Please insert Weight");
 			return false;
@@ -329,7 +323,7 @@ public class BaledMaterial {
 
 		int reply = JOptionPane.showConfirmDialog(null,
 				"Review entered data : \n" + "\n Material Type : " + comboBoxBaledMaterial.getSelectedItem()
-						+ "\n Date : " + txtFieldDate.getText() + "\n Time : " + txtFieldTime.getText() + "\n Weight : "
+						+ "\n Date : " + new java.sql.Date(dateChooser.getDate().getTime()) + "\n Weight : "
 						+ txtFieldWeight.getText() + " lbs ",
 				"Confirm Submit", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
@@ -339,5 +333,4 @@ public class BaledMaterial {
 			return false;
 
 	}// End of review()
-
 }// End of class.
