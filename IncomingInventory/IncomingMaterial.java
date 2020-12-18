@@ -152,7 +152,7 @@ public class IncomingMaterial {
 
 		comboBoxCustomerName.setToolTipText("Select Customer Name");
 		comboBoxCustomerName
-				.setModel(new DefaultComboBoxModel(new String[] {"Twin Enviro", "Waste Management", "Republic Services", "Other"}));
+				.setModel(new DefaultComboBoxModel(new String[] {"Twin Enviro", "Waste Management", "Republic Services", "Overton", "Other"}));
 		comboBoxCustomerName.setFont(new Font("Calibri", Font.PLAIN, 16));
 		comboBoxCustomerName.setMaximumRowCount(100);
 
@@ -311,9 +311,9 @@ public class IncomingMaterial {
 						if (review()) {
 							inputData(); // Calling Insertion Method to insert Validated inputs into SQL.
 							InsertMaterialData();
-						}
-					}
-				}
+						}//end of review()
+					}//end of validation()
+				}//end of try
 
 				catch (ClassNotFoundException | SQLException e1) {
 
@@ -361,24 +361,28 @@ public class IncomingMaterial {
 		objMaterialType = cmbobxMaterialType.getSelectedItem();
 		ticketNumber = txtFieldTicketNumber.getText();
 		
-		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
-
-		String dtChooser = sdfo.format(dateChooser.getDate());
-		String todaysDate = sdfo.format(new Date());
-		
-		
-		if(dtChooser.compareTo(todaysDate)>0) {
-			JOptionPane.showMessageDialog(null, "Date can not be a future date", "Warning Message",
-					JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		
-		if (comboBoxCustomerName.getSelectedIndex() == 3) {
+		if (comboBoxCustomerName.getSelectedIndex() == 4) {
 			if (!txtFieldOtherCustomerName.getText().matches("[a-zA-Z0-9]+")) {
 				JOptionPane.showMessageDialog(null, "Please Enter Customer Name in Other", "No null values allowed",
 						JOptionPane.WARNING_MESSAGE);
 				return false;
 			}
+		}
+		
+		if(dateChooser.getDate() == null) {
+			JOptionPane.showMessageDialog(null, "Please enter valid date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
+		String dtChooser = sdfo.format(dateChooser.getDate());
+		String todaysDate = sdfo.format(new Date());
+		
+		if(dtChooser.compareTo(todaysDate)>0) {
+			JOptionPane.showMessageDialog(null, "Date can not be a future date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 
 		if (!ticketNumber.matches("[0-9]+")) {
@@ -418,13 +422,30 @@ public class IncomingMaterial {
 			}
 		}
 		
+		else if(dateChooser.getDate() == null) { //dtChooser.compareTo(todaysDate)>0) {
+			JOptionPane.showMessageDialog(null, "Date can not be a future date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+//			SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
+//			String dtChooser = sdfo.format(dateChooser.getDate());
+//			String todaysDate = sdfo.format(new Date());
+			return false;
+		}
+		
 		else {
 			return true;
 		}
-
+		
 		return true;
 
 	}// End of method Validation. It calls in Submit button action event.
+	
+	public boolean dateValidation() {
+		
+		
+		
+		
+		return true;
+	}
 
 	public void inputData() {
 
@@ -470,7 +491,7 @@ public class IncomingMaterial {
 		 * grossWeightInTons = 0; }
 		 */
 		
-		if (comboBoxCustomerName.getSelectedIndex() == 3) {
+		if (comboBoxCustomerName.getSelectedIndex() == 4) {
 			objCustomerName = txtFieldOtherCustomerName.getText();
 		}
 
@@ -516,7 +537,7 @@ public class IncomingMaterial {
 			grosseightInLb = Double.parseDouble(txtFieldWeightSS.getText());
 		}
 		
-		if (comboBoxCustomerName.getSelectedIndex() == 3) {
+		if (comboBoxCustomerName.getSelectedIndex() == 4) {
 			objCustomerName = txtFieldOtherCustomerName.getText();
 		}
 

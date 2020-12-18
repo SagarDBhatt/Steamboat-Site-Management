@@ -2,20 +2,17 @@ package SteamboatSprings.SiteManagementAPI.ProductionInventory;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -23,21 +20,19 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
+
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import com.toedter.calendar.JDateChooser;
 
 import SteamboatSprings.SiteManagementAPI.CurrentInventory.CurrentInventoryCount;
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-import java.awt.GridLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.toedter.calendar.JDateChooser;
-import java.awt.FlowLayout;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.UIManager;
 
 public class BaledMaterial {
 
@@ -152,7 +147,7 @@ public class BaledMaterial {
 		comboBoxBaledMaterial.setToolTipText("Baled Material");
 		comboBoxBaledMaterial.setFont(new Font("Calibri", Font.PLAIN, 16));
 		comboBoxBaledMaterial.setModel(
-				new DefaultComboBoxModel(new String[] { "OCC", "ONP", "HDPEN", "HDPEC", "PET", "TIN", "UBC" }));
+				new DefaultComboBoxModel(new String[] {"OCC", "ONP", "HDPEN", "HDPEC", "PET", "TIN", "UBC", "Glass"}));
 		comboBoxBaledMaterial.setSelectedIndex(0);
 
 		// End
@@ -298,11 +293,20 @@ public class BaledMaterial {
 
 	public boolean validation() {
 
+		if(dateChooser.getDate() == null) {
+			JOptionPane.showMessageDialog(null, "Please enter valid date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
+		if(comboBoxBaledMaterial.getSelectedIndex() == 7) {
+			//System.out.println("Selecte material = " + comboBoxBaledMaterial.getSelectedItem());
+			txtFieldWeight.setText("850");
+		}
+		
 		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
-
 		String dtChooser = sdfo.format(dateChooser.getDate());
 		String todaysDate = sdfo.format(new java.util.Date());
-		
 		
 		if(dtChooser.compareTo(todaysDate)>0) {
 			JOptionPane.showMessageDialog(null, "Date can not be a future date", "Warning Message",

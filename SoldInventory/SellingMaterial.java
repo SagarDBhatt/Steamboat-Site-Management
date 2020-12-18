@@ -352,19 +352,6 @@ public class SellingMaterial {
 		objCustomerName = comboBoxCustomerName.getSelectedItem();
 		objMaterialType = comboBoxMaterialType.getSelectedItem();
 		objNumberOfBales = comboBoxNumberOfBales.getSelectedItem();
-
-		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
-
-		String dtChooser = sdfo.format(dateChooser.getDate());
-		String todaysDate = sdfo.format(new Date());
-		
-		
-		if(dtChooser.compareTo(todaysDate)>0) {
-			JOptionPane.showMessageDialog(null, "Date can not be future date", "Warning Message",
-					JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		
 		
 		if (comboBoxCustomerName.getSelectedIndex() == 3) {
 
@@ -381,7 +368,23 @@ public class SellingMaterial {
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-
+		
+		if(dateChooser.getDate() == null) {
+			JOptionPane.showMessageDialog(null, "Please enter valid date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");
+		String dtChooser = sdfo.format(dateChooser.getDate());
+		String todaysDate = sdfo.format(new java.util.Date());
+		
+		if(dtChooser.compareTo(todaysDate)>0) {
+			JOptionPane.showMessageDialog(null, "Date can not be a future date", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
 		else if (!txtFieldBOLNumber.getText().matches("[0-9]+")) {
 			JOptionPane.showMessageDialog(null, "Please Enter valid BOL Ticket number in digits.", "Warning Message",
 					JOptionPane.WARNING_MESSAGE);
