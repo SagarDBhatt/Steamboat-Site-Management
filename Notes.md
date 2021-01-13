@@ -5,3 +5,4 @@
 Resolution:
 * Create a function with ticket number as a parameter. 
 * This function queries the database and identifies if the same weigh ticket number already presents. 
+* If the weigh ticket already presents then error dialog box will appear and ask user to insert the different weigh ticket. 
