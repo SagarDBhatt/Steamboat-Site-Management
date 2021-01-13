@@ -302,6 +302,8 @@ public class BaledMaterial {
 		if(comboBoxBaledMaterial.getSelectedIndex() == 7) {
 			//System.out.println("Selecte material = " + comboBoxBaledMaterial.getSelectedItem());
 			txtFieldWeight.setText("850");
+			txtFieldWeight.setEditable(false);
+			txtFieldWeight.setEnabled(false);
 		}
 		
 		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy/MM/dd");

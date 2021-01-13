@@ -390,6 +390,12 @@ public class IncomingMaterial {
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
+		
+		else if(!weighTicketDuplicationValidation(ticketNumber)) {
+			JOptionPane.showMessageDialog(null, "Weigh Ticket already entered. Please enter different weigh ticket", "Warning Message",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
 
 		else if (objMaterialType.toString().equals("Select Material")) {
 			JOptionPane.showMessageDialog(null, "Please Select Valid Material", "Warning Message",
@@ -439,10 +445,21 @@ public class IncomingMaterial {
 
 	}// End of method Validation. It calls in Submit button action event.
 	
-	public boolean dateValidation() {
+	public boolean weighTicketDuplicationValidation(String weighTicket) throws SQLException {
+		String qryWeighTicket = "  select count(WeightTicketNumber) as CountOfWeighTicket\r\n" + 
+				"  from IncomingMaterial\r\n" + 
+				"  where WeightTicketNumber = "+ weighTicket +" ";
 		
+		ResultSet rsWeighTicket = aStatement.executeQuery(qryWeighTicket);
+	
 		
-		
+		if(rsWeighTicket.next()) {
+			double duplicateCount = rsWeighTicket.getDouble("CountOfWeighTicket");
+			//System.out.println("Count value = " + duplicateCount);			
+			if(duplicateCount>=1)
+				return false;
+		}
+			
 		
 		return true;
 	}
